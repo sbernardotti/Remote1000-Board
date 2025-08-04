@@ -1,23 +1,23 @@
 // Remote1000 Board v1.0
 // https://github.com/sbernardotti/Remote1000-Board
 
-#define UPPER_A_PIN 4
-#define UPPER_B_PIN 5
+#define INNER_A_PIN 4
+#define INNER_B_PIN 5
 #define SW_PIN 6
-#define LOWER_A_PIN 7
-#define LOWER_B_PIN 8
+#define OUTER_A_PIN 7
+#define OUTER_B_PIN 8
 
 #define SW_INTERVAL 250
 
-void updateLowerEncoder() {
+void updateOuterEncoder() {
   static unsigned char oldAB = 3;
   static char encVal = 0;
   static const char encStates[] = { 0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0 };
 
   oldAB <<= 2;
 
-  if (digitalRead(LOWER_A_PIN)) oldAB |= 0x02;
-  if (digitalRead(LOWER_B_PIN)) oldAB |= 0x01;
+  if (digitalRead(OUTER_A_PIN)) oldAB |= 0x02;
+  if (digitalRead(OUTER_B_PIN)) oldAB |= 0x01;
 
   encVal += encStates[(oldAB & 0x0f)];
 
@@ -30,15 +30,15 @@ void updateLowerEncoder() {
   }
 }
 
-void updateUpperEncoder() {
+void updateInnerEncoder() {
   static unsigned char oldAB = 3;
   static char encVal = 0;
   static const char encStates[] = { 0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0 };
 
   oldAB <<= 2;
 
-  if (digitalRead(UPPER_A_PIN)) oldAB |= 0x02;
-  if (digitalRead(UPPER_B_PIN)) oldAB |= 0x01;
+  if (digitalRead(INNER_A_PIN)) oldAB |= 0x02;
+  if (digitalRead(INNER_B_PIN)) oldAB |= 0x01;
 
   encVal += encStates[(oldAB & 0x0f)];
 
@@ -66,17 +66,17 @@ void updateSwitch() {
 }
 
 void setup() {
-  pinMode(LOWER_A_PIN, INPUT_PULLUP);
-  pinMode(LOWER_B_PIN, INPUT_PULLUP);
-  pinMode(UPPER_A_PIN, INPUT_PULLUP);
-  pinMode(UPPER_B_PIN, INPUT_PULLUP);
+  pinMode(OUTER_A_PIN, INPUT_PULLUP);
+  pinMode(OUTER_B_PIN, INPUT_PULLUP);
+  pinMode(INNER_A_PIN, INPUT_PULLUP);
+  pinMode(INNER_B_PIN, INPUT_PULLUP);
   pinMode(SW_PIN, INPUT_PULLUP);
 
   Serial.begin(9600);
 }
 
 void loop() {
-  updateLowerEncoder();
-  updateUpperEncoder();
+  updateOuterEncoder();
+  updateInnerEncoder();
   updateSwitch();
 }
